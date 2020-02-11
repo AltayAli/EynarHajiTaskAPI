@@ -70,7 +70,7 @@ namespace EynarHajiTask.Controllers
             return NoContent();
         }
         [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchUserFromUser(int id,[FromBody]EmailModel model)
+        public async Task<IActionResult> PatchUserFromUser(int id,EmailModel model)
         {
 
             var user = _context.Users.Find(id);

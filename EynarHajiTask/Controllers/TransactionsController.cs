@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EynarHajiTask.Data;
+using EynarHajiTask.Models;
 
 namespace EynarHajiTask.Controllers
 {
@@ -39,10 +40,10 @@ namespace EynarHajiTask.Controllers
             return transaction;
         }
 
-        [HttpGet("{email}")]
-        public async Task<ActionResult<List<Transaction>>> GetTransactionByEmail(string email)
+        [HttpGet]
+        public async Task<ActionResult<List<Transaction>>> GetTransactionByEmail(EmailModel model)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x=>x.Email== email);
+            var user = await _context.Users.FirstOrDefaultAsync(x=>x.Email== model.Email);
             var transaction = await _context.Transactions.Where(x=>x.UserId==user.Id).ToListAsync();
 
             if (transaction == null)
