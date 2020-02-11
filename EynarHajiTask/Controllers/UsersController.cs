@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EynarHajiTask.Data;
+using System.Web.Helpers;
+using EynarHajiTask.Models;
 
 namespace EynarHajiTask.Controllers
 {
@@ -67,10 +69,39 @@ namespace EynarHajiTask.Controllers
 
             return NoContent();
         }
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchUserFromUser(int id,[FromBody]EmailModel model)
+        {
 
+            var user = _context.Users.Find(id);
+            if (user != null)
+            {
+                try
+                {
+                    user.Email = model.Email;
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+
+           
+
+            return NoContent();
+        }
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
+            user.Password = Crypto.HashPassword(user.Password);
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
